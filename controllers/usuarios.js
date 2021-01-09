@@ -11,7 +11,7 @@ const getUsuarios = async (req, res) => {
 
     const [ usuario, total ] = await Promise.all([
      Usuario
-            .find({}, 'nombre email google role img')
+            .find({}, 'firstname lastname email phone img google terminos role ')
             .skip( desde )
             .limit( 5 ),
 
@@ -82,6 +82,8 @@ const actualizarUsuario = async ( req, res = response ) => {
     try {
 
         const usuarioBD = await Usuario.findById( uid );
+   
+
         if( !usuarioBD ) {
             return res.status(404).json(        
                 {
@@ -91,8 +93,9 @@ const actualizarUsuario = async ( req, res = response ) => {
             )
         }
        // Actualizar de campos -- no tomara en cuenta el google
-        const { google, email, ...campos } = req.body;
-
+    
+        const { password, google, email, ...campos } = req.body;
+    
         if( usuarioBD.email !== email ) {
 
             const existeEmail = await Usuario.findOne( { email } );
@@ -105,9 +108,7 @@ const actualizarUsuario = async ( req, res = response ) => {
         }
 
         campos.email = email;
-        const usuarioActualizado = await Usuario.findOneAndUpdate( uid, campos, { new: true } );
-
-
+        const usuarioActualizado = await Usuario.findByIdAndUpdate( uid, campos, { new: true } );
 
         res.json({
             ok: true,
@@ -115,7 +116,7 @@ const actualizarUsuario = async ( req, res = response ) => {
         } )
 
     }catch (error) {
-        console.log(error);
+
         res.status(500).json( {
             ok: false,
             msg: 'Error inespedaro'

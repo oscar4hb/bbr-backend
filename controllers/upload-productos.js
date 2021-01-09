@@ -1,6 +1,6 @@
 const path = require('path');
 const { response } = require('express');
-const {  updateImgProduct } = require('../helpers/update-img');
+const {  updateImgProduct } = require('../helpers/upgrade-img');
 const fs = require('fs');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');

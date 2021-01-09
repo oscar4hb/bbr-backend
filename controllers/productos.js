@@ -1,20 +1,25 @@
 const { response } = require( 'express' );
 const Producto = require('../models/producto');
+const Color = require('../models/models-share/colores');
+const { populate } = require('../models/producto');
 
 
 
 const getProductos = async ( req, res = response ) => {
-    // const uid = req.uid;
-    // console.log(uid)
-    // const productos = await Producto.find().populate('usuario', 'nombre email');
+
 
     const desde = Number(req.query.desde) || 0;
 
     const [ productos, total ] = await Promise.all([
      Producto
-            .find()
+            .find({},{__v: 0 })
             .populate('usuario', 'nombre email')
-            .populate('categoria', 'categoria')
+            //.populate('subcategoria', 'subcategoria')
+            .populate({path:'informacion', populate:{ path:'colorstandar', select:'color'}})
+            .populate({path:'variantes', populate:{ path:'color', select: [] }})
+            .populate({path:'subcategoria', populate:{ path:'categoria', select:'categoriaNombre'}, 
+                                            //populate:{ path: 'usuario', select: 1 } // muestra todo los datos del usuario del Creador de subcategoria
+                                        })
             .skip( desde )
             .limit( 10 ),
 
@@ -22,7 +27,11 @@ const getProductos = async ( req, res = response ) => {
 
     ]);
 
-    
+    /**
+     Project.find(query).populate({ path: 'pages', 
+                                 populate:{ path: 'components', model: 'Component' } }) 
+                                .exec(function(err, docs) {});
+     */
 
     res.json({
             ok: true,
@@ -36,12 +45,14 @@ const crearProducto = async ( req, res = response ) => {
 
     const uid = req.uid;
 
-    const cuerpoProducto = new Producto ({ usuario: uid  , ...req.body });
-
+ const cuerpoProducto = new Producto ({ usuario: uid  , ...req.body });
+   //const productoDB = await cuerpoProducto.save();
+ 
+    /** */
 
 try {
     
-
+  
   const productoDB = await cuerpoProducto.save();
 
     res.json( {
@@ -57,6 +68,7 @@ try {
     })
     
 }
+
 
 }
 
@@ -142,10 +154,39 @@ const borrarProducto = async ( req, res = response ) => {
     
 }
 
+const agregarcolor = async (req, res = response) => {
+
+    const { color } = req.body
+
+    const colorDB = await Color.findOne( {color}, {_id: 0} );
+
+    if (colorDB) {
+
+        return res.status(500).json({
+            ok: false,
+            msg: `El color: ${colorDB.color} ya existe`
+        })
+
+    } else {
+            const colorNuevo = new Color({ color });
+            await colorNuevo.save();
+    
+        res.json({
+            ok: true,
+            msg: `El color ha sido agregado ${colorNuevo.color}`
+        })
+ 
+    }
+
+
+
+
+}
 module.exports = {
 
     getProductos,
     crearProducto,
     actualizarProducto,
     borrarProducto,
+    agregarcolor
 };

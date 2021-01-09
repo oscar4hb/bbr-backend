@@ -1,22 +1,29 @@
-const path = require('path');
+
 const { response } = require( 'express' );
 const { v4: uuidv4 } = require('uuid');
-const { updateImg } = require('../helpers/update-img');
-const fs = require('fs');
+const { upgradeImg , upgradeDeleteImg } = require('../helpers/upgrade-img');
+const AWS = require('aws-sdk');
+const {  s3 } = require("../aws/acceso.aws");
 
-const fileUpload = ( req, res= response ) => {
+
+// tambien sierve para el PUT o actualizar
+const subirFoto = async ( req, res= response ) => {
+    
+    const { orden } = req.body;
+    
 
 
     const tipo = req.params.tipo;
     const id = req.params.id;
 
-    const tipoValidos = [ 'usuarios', 'categorias' ];
+    // Evaluar imagen 
+    const tipoValidos = [ 'usuarios', 'categorias', 'producto' ];
 
     if( !tipoValidos.includes(tipo) ) {
 
         return res.status(400).json({
             ok:false,
-            msg: 'No pertenece algun seleccion'
+            msg: ` ${tipo} no pertenece ninguna carpeta de almacenamiento`
         });
     }
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -44,55 +51,96 @@ const fileUpload = ( req, res= response ) => {
       //Generar el nombre del archivo
       const nombreArchivo = `${ uuidv4()  }.${ extensionArchivo }`
 
-      //path para mover la imagen
-      const path = `./uploads/${ tipo }/${ nombreArchivo }`;
 
-      //Mover la imagen
+        // Almacenar imagen en AWS S3
 
-      file.mv( path, (err) => {
-          if(err) {
-              console.log(err);
-              return res.status(500).json({
-                  ok: false,
-                  msg: 'No se movio el file'
-              });
-          }
+        AWS.config.update({
+         
+            accessKeyId: process.env.AWS_ACCESS_KEY, 
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            region: process.env.AWS_REGION,
+        })
 
-      // Actualizar base de datos
+        let albumPhotosKey = encodeURIComponent(tipo) + "/";
 
-      updateImg( tipo, id, nombreArchivo );
-
-          res.json({
-              ok: true,
-              msg: 'File subido',
-              nombreArchivo
-          });
-      } )
+        let photoKey = albumPhotosKey + nombreArchivo;
+    
+        const upload = new AWS.S3.ManagedUpload({
+            params:  {
+    
+                    Bucket: process.env.AWS_NAME_BUCKET,
+                    Key: photoKey,
+                    Body: file.data,
+                    ACL: "public-read",
 
 
-}
+             }
+        });
 
-const retornaImagen =  ( req, res ) => {
+        const promise =  upload.promise();
 
-    const tipo = req.params.tipo;
-    const foto = req.params.foto;
+        promise.then( (data) => {
 
-    const pathImg = path.join( __dirname, `../uploads/${ tipo }/${ foto }` );
+            return res.json({
+                ok: true,
+                msg: `Successfull uploaded photo on ${tipo}`,
+                data
+            })
+             // viewAlbum(albumName);
+        },
+             
+            (err) =>  {
+                return res.json({  
+                    ok: false,
+                    err   })           
+              }         
+            )
 
+            urlImagen = (await promise).Location;
+    
+            upgradeImg ( tipo, id, urlImagen, orden )
 
-    //Imagen por defecto
-    if( fs.existsSync( pathImg ) ) {
-        res.sendFile( pathImg );
-    } else {
-        const pathImg = path.join( __dirname, `../assets/img/no-img.jpg`);
-        res.sendFile( pathImg );
-    }
+        }
+const deleteFoto = async (req, res = response) => {
+ 
 
-}
+            // Evaluar el nombre de la ruta de la imagen
+            const albumName = req.params.tipo;
+            const id = req.params.id;   
+            const { photoKey } = req.body;
+           
+            if (!photoKey ) {
+                return res.json({
+                    ok: false,
+                    msg: 'La foto no existe o ya fue eliminado'
+                })
+            }
+ 
+            const deletePhoto = (albumName, photoKey) => {
+                s3.deleteObject({ Key: photoKey }, (err, data) => {
+        
+                  if (err) {
+                    return console.log("There was an error deleting your photo: ", err.message);
+                  }
+                  console.log("Successfully deleted photo.");
+                  res.json({
+                    ok: true,
+                    msg: `Foto: ${photoKey} fue eliminado `
+                })
+                
+                });
+        
+                // viewAlbum(albumName);
+              }
+        
+              deletePhoto(albumName, photoKey );
+              upgradeDeleteImg ( albumName, id)
+        
+        }
 
 
 module.exports = {
 
-    fileUpload,
-    retornaImagen
+    subirFoto,
+    deleteFoto
 }

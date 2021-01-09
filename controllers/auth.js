@@ -19,7 +19,7 @@ const login = async (req, res = response) => {
         const usuarioDB = await Usuario.findOne({
             email
         });
-
+        
         // verificar Email
 
         if (!usuarioDB) {
@@ -63,7 +63,7 @@ const googleSignIn = async( req, res = response ) => {
 
     // Importante de poner la clave despues del body para obtener solo el codigo
     const googleToken = req.body.token;
- console.log(googleToken)
+
     try {
         
         const { name, family_name, email, picture } = await googleVerify( googleToken );
@@ -122,7 +122,7 @@ const renewToken = async ( req, res= response ) => {
     
     // Obtener datos del Usuario
     const usuario = await Usuario.findById(uid)
-                    .populate( 'usuario ', 'firstname lastname email img role google')
+                    .populate( 'usuario ', 'firstname lastname email phone img google terminos role')
    
 
     res.json({

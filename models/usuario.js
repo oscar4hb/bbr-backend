@@ -21,19 +21,30 @@ const UsuarioSchema = Schema ( {
         required: true,
 
     },
+    phone: {
+        type: String,
+
+    },
     img: {
         type: String,
 
+    },
+
+    google: {
+        type: Boolean,
+        default: false
+    },
+
+    countsesion: { type : Number},
+    
+    terminos: {
+        type: Boolean
     },
     role: {
         type: String,
         required: true,
         default: 'USER_ROLE'
     },
-    google: {
-        type: Boolean,
-        default: false
-    }
 } );
 
 UsuarioSchema.method('toJSON', function() {

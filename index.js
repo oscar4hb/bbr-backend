@@ -25,13 +25,21 @@ dbConnection();
 // Rutas
 app.use('/api/usuarios', require('./routes/usuarios') );
 app.use('/api/productos', require('./routes/productos') );
-app.use('/api/caracteristicaproducto', require('./routes/caracteristicaproducto') );
 app.use('/api/categorias', require('./routes/categorias') );
+app.use('/api/subcategoria', require('./routes/subcategoria') );
 app.use('/api/todo', require('./routes/busquedas') );
 app.use('/api/login', require('./routes/auth') );
+
+// upload de imagenes y album 
+app.use('/api/album', require('./routes/album') );
 app.use('/api/upload', require('./routes/uploads') );
 
 app.use('/api/producto', require('./routes/uploads-productos') );
+
+// adress de usuario
+
+app.use('/api/adress', require('./routes/adress') );
+
 
 // puerto de servidor 
 app.listen(process.env.PORT, () => {

@@ -2,26 +2,106 @@ const { Schema, model } = require('mongoose');
 
 
 const ProductoSchema = Schema({
-    nombre: {
+
+// primer pagina 
+    titulo: {
         type: String,
         required: true,
             },
 
-    descripcion: {
-        type: String
+    codigo : {  
+                type: String,
+                required: true 
             },
-    precio: {
-        type: Number,
-        required: true
-    },
-    stock: {
-        type: Number
-    },
-    imagenes: [ {
-        type: String
-    } ],
 
-    etiquetas: [],
+    subcategoria :{
+        type: Schema.Types.ObjectId,
+        ref: 'Subcategoria',
+        required: true 
+    },
+
+// Segunda pagina
+    
+    informacion : {
+        marca: {
+            type: String,
+            required: true,
+        },
+
+        serie : {
+            type: String,
+            required: true,
+        },
+
+        colorstandar : {
+            type: Schema.Types.ObjectId,
+            ref: 'Color'
+        },
+
+        peso : {
+            type: String,
+        },
+
+        volumen : {
+            type: String,
+        },
+
+        stock : {
+            type: String,
+        },
+
+
+    },
+
+// Tercera pagina
+
+    variantes : {
+             existe : { type: Boolean,
+                        default: false,
+                        required: true,
+                        },
+             color : [
+                 {  type: Schema.Types.ObjectId,
+                    ref: 'Color'}
+                     
+                    ],
+
+        
+            },
+// Cuarta pagina 
+    imgs : {
+            principal: { 
+                type : String, 
+               // required: true
+             },
+            segundo: { type : String },
+            tercero: { type : String },
+            cuarto: { type : String },
+            quinto: { type : String },
+            sexto: { type : String },
+            septimo: { type : String },
+            octavo: { type : String },
+            noveno: { type : String },
+            },
+// quinta pagina
+    descripcion : {
+
+                type: String,
+               // required: true
+        
+    },
+    
+    etiquetas : {
+        primero: { type : String },
+        segundo: { type : String },
+        tercero: { type : String },
+        cuarto: { type : String },
+        quinto: { type : String },
+
+    },
+    created_at: { type: Date, required: true, default: Date.now },
+
+// otras paginas
 
     rating: {
         type: Number,
@@ -29,31 +109,23 @@ const ProductoSchema = Schema({
     reviews: {
         type: Number,
     },
-    disponibilidad: {
-        type: String
-    },
 
-    marca: {
-        type: String
-    },
 
-    created_at: { type: Date, required: true, default: Date.now },
-   
-    categoria :{
+    comentario :[{
         type: Schema.Types.ObjectId,
-        ref: 'Categoria',
-        required: true },
+        ref: 'ComentarioProducto',
+        }],
+   
 
     usuario: {
         required: true,
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
     },
-    // caracteristicasProducto: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'CaracteristicaProducto',
-    //     required: true,
-    // }
+
+    costEnvLocal: {
+        type: String
+    },
 
 }, {
     collection: 'productos'

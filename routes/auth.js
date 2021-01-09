@@ -21,7 +21,6 @@ router.post( '/',
 
 router.post( '/google', 
         [
-            
             check ('token', 'El token es obligatorio').not().isEmpty(),
             validarCampos
         ], googleSignIn );

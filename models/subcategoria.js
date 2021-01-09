@@ -1,12 +1,16 @@
 const { Schema, model } = require('mongoose');
 
 
-const CategoriaSchema = Schema({
-    categoriaNombre: {
+const SubCategoriaSchema = Schema({
+    subcategoria: {
         type: String,
         required: true
-
             },
+            
+    categoria: {
+        type: Schema.Types.ObjectId,
+        ref: 'Categoria',
+                    },
 
     cantidad: {
         type: Number
@@ -30,9 +34,9 @@ const CategoriaSchema = Schema({
 
 
 }, {
-    collection: 'categorias'
+    collection: 'subcategoria'
 }); 
 
 
 
-module.exports = model('Categoria', CategoriaSchema);
+module.exports = model('Subcategoria', SubCategoriaSchema);

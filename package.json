@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/mongoose": "^5.7.36",
+    "aws-sdk": "^2.820.0",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
