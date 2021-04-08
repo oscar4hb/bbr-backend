@@ -1,9 +1,36 @@
 const { response } = require( 'express' );
 const Producto = require('../models/producto');
 const Color = require('../models/models-share/colores');
-const { populate } = require('../models/producto');
 
 
+
+
+const getProducto = async ( req, res = response ) => {
+
+
+    const id = req.params.id;
+
+    try {
+        const producto = await Producto.findById( id );
+
+        if ( !producto ) {
+    
+            console.log('No existe');
+            res.json( {
+                ok: true,
+                msg: 'Producto no encontrado por ID',
+            })
+        }
+      
+    res.status(200).json({
+           producto,
+    });
+        
+    } catch (error) {
+        
+    }
+
+}
 
 const getProductos = async ( req, res = response ) => {
 
@@ -44,21 +71,17 @@ const getProductos = async ( req, res = response ) => {
 const crearProducto = async ( req, res = response ) => {
 
     const uid = req.uid;
-
- const cuerpoProducto = new Producto ({ usuario: uid  , ...req.body });
-   //const productoDB = await cuerpoProducto.save();
  
-    /** */
-
 try {
     
-  
-  const productoDB = await cuerpoProducto.save();
-
+    const cuerpoProducto = new Producto ({ usuario: uid  , ...req.body });
+    const productoDB = await cuerpoProducto.save();
+   
     res.json( {
             ok: true,
             productoDB
         } )
+   
 
 
 } catch (error) {
@@ -182,11 +205,38 @@ const agregarcolor = async (req, res = response) => {
 
 
 }
-module.exports = {
 
+const deleteColor = async ( req, res = response ) => {
+
+    const { color } = req.body;
+
+    const colorExiste = await Color.findOne({color});
+
+    if ( !colorExiste ) {
+        return res.status(500).json({
+            ok: false,
+            msg: `El color: ${ color } no existe`
+        })
+    } else {
+        await Color.findOneAndDelete({color});
+        
+        res.json({
+            ok: true,
+            msg: `Se elimino el colo ${ color } `
+        })
+
+    }
+
+
+
+}
+
+module.exports = {
+    getProducto,
     getProductos,
     crearProducto,
     actualizarProducto,
     borrarProducto,
-    agregarcolor
+    agregarcolor,
+    deleteColor
 };

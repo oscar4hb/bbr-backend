@@ -18,6 +18,7 @@ try {
 
     const { uid } = jwt.verify( token, process.env.JWT_SECRET );
      req.uid = uid;
+ 
      next();
     
 } catch (error) {

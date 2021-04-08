@@ -8,6 +8,8 @@ const getCategorias = async (req, res = response) => {
     const categorias = await Categoria.find().populate('usuario', 'firstname');
     const cantidad = await Categoria.countDocuments();
 
+
+
     res.json({
         ok: true,
         categorias,
@@ -26,7 +28,7 @@ const getCategoria = async (req, res = response) => {
     try {
         
 
-        const [categoria, total] = await Promise.all([
+        const [subcategorias, total] = await Promise.all([
             Subcategoria
             .find({categoria: categoriaid })
             .skip(desde)
@@ -39,7 +41,7 @@ const getCategoria = async (req, res = response) => {
 
         res.json({
             ok: true,
-            categoria,
+            subcategorias,
             total,
            
         })

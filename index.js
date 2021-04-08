@@ -24,7 +24,7 @@ dbConnection();
 
 // Rutas
 app.use('/api/usuarios', require('./routes/usuarios') );
-app.use('/api/productos', require('./routes/productos') );
+app.use('/api/productos', require('./routes/productos'));
 app.use('/api/categorias', require('./routes/categorias') );
 app.use('/api/subcategoria', require('./routes/subcategoria') );
 app.use('/api/todo', require('./routes/busquedas') );
@@ -49,3 +49,6 @@ app.listen(process.env.PORT, () => {
 //     // res.send('Servidor Funcionado :)'),
 //     res.sendFile(__dirname + '/index.html')
 // });
+
+
+

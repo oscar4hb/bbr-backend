@@ -22,10 +22,10 @@ router.post('/',
              );
 
 router.put('/:id', 
-       // validarJWT,
+         validarJWT,
         [
-         //check('nombre', 'El nombre de la subcategoria es obligatorio').not().isEmpty(),
-        // validarCampos,
+         check('nombre', 'El nombre de la subcategoria es obligatorio').not().isEmpty(),
+        validarCampos,
         ], putSubcategoria
          );
 
