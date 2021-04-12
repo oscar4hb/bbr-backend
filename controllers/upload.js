@@ -40,7 +40,7 @@ const subirFoto = async ( req, res= response ) => {
       const extensionArchivo = nombreCortado[ nombreCortado.length - 1 ];
 
       //Validacion de extensión 
-      const extensionValida = [ 'png', 'jpg', 'jpeg', 'gif' ];
+      const extensionValida = [ 'png', 'jpg', 'jpeg', 'gif', 'JPG' ];
       if ( !extensionValida.includes( extensionArchivo ) ) {
           return res.status(400).json({
               ok: false,

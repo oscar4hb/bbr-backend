@@ -152,21 +152,23 @@ const borrarCategoria = async (req, res = response) => {
         const categoria = await Categoria.findById(id);
 
         if (!categoria) {
-            res.status(404).json({
+            res.status(200).json({
                 ok: true,
                 msg: 'Categoria no encontrado por ID',
             });
 
         }
 
+        if( categoria ){
+            await Categoria.findByIdAndDelete(id);
 
-        await Categoria.findByIdAndDelete(id);
+            res.json({
+                ok: true,
+                msg: 'Categoria Eliminado',
+            })
+        }
 
-        res.json({
-            ok: true,
-            msg: 'Categoria Eliminado',
 
-        })
 
     } catch (error) {
 

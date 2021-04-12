@@ -4,16 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="450326615179-afjvr00faa5u5crja1n7hgp09cbnqbq8.apps.googleusercontent.com">
+<style>
+#box{
+  background-color: rgb(224, 228, 222);
+  color:black;
+  display: flex;
+  margin: 0 auto;
+  padding: 2em;
 
+  border: 5px;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  text-align: center;
 
-    <title>Sign-In</title>
+}
+</style>
+
+    <title>Server</title>
 </head>
 <body>
     
-<h1>Google Sign-In</h1>
-<div class="g-signin2" data-onsuccess="onSignIn"></div>
+<!-- <h1>Google Sign-In</h1> -->
+<!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
+<div id="box">
+  <div class="content">
+    <h1 style="font-family:'Lucida Sans',Verdana, sans-serif"> SERVER is Private </h1>
+    <h3> Plese click close </h3>
+  </div>
+  
+</div>
 
-<a href="#" onclick="signOut();">Sign out</a>
+
+<!-- <a href="#" onclick="signOut();">Sign out</a> -->
 
     <script>
         function onSignIn(googleUser) {

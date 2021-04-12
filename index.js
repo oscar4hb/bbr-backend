@@ -37,14 +37,17 @@ app.use('/api/upload', require('./routes/uploads') );
 app.use('/api/producto', require('./routes/uploads-productos') );
 
 // adress de usuario
-
 app.use('/api/adress', require('./routes/adress') );
 
+// Unidades 
+app.use('/api/unidades', require('./routes/unidades'));
 
 // puerto de servidor 
 app.listen(process.env.PORT, () => {
     console.log('Servidor on port', process.env.PORT)
-})
+});
+
+
 // app.get('/', ( req, res) => {
 //     // res.send('Servidor Funcionado :)'),
 //     res.sendFile(__dirname + '/index.html')
