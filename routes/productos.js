@@ -1,5 +1,12 @@
 const { Router } = require( 'express' );
-const { getProducto, getProductos, crearProducto, actualizarProducto, borrarProducto, agregarcolor, deleteColor } = require( '../controllers/productos' )
+const {  getProducto, 
+         getProductos, 
+         crearProducto, 
+         actualizarProducto, 
+         borrarProducto,
+         getColor, 
+         agregarcolor, 
+         deleteColor } = require( '../controllers/productos' )
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 /*
@@ -39,6 +46,8 @@ router.put('/:id',
 
  router.delete ( '/:id', validarJWT,  borrarProducto );
 
+
+ router.get('/color', getColor)
  router.post('/color',validarJWT, agregarcolor  );
  router.delete ( '/color',validarJWT, deleteColor );
 

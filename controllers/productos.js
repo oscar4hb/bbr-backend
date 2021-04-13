@@ -177,26 +177,38 @@ const borrarProducto = async ( req, res = response ) => {
     
 }
 
+// Peso
+const getColor = async (req, res = response) => {
+    const colores = await Color.find({}, { __v: 0 });
+
+    res.json({
+        ok: true,
+        colores,
+    });
+};
+
+
 const agregarcolor = async (req, res = response) => {
 
+    const uid = req.uid;
     const { color } = req.body
 
     const colorDB = await Color.findOne( {color}, {_id: 0} );
 
     if (colorDB) {
 
-        return res.status(500).json({
+        return res.status(202).json({
             ok: false,
             msg: `El color: ${colorDB.color} ya existe`
         })
 
     } else {
-            const colorNuevo = new Color({ color });
+            const colorNuevo = new Color({ usuario: uid , color });
             await colorNuevo.save();
     
         res.json({
             ok: true,
-            msg: `El color ha sido agregado ${colorNuevo.color}`
+            msg: `Color: ${colorNuevo.color} ha sido agregado `
         })
  
     }
@@ -237,6 +249,7 @@ module.exports = {
     crearProducto,
     actualizarProducto,
     borrarProducto,
+    getColor,
     agregarcolor,
     deleteColor
 };
