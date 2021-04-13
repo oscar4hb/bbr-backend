@@ -47,9 +47,9 @@ router.put('/:id',
  router.delete ( '/:id', validarJWT,  borrarProducto );
 
 
- router.get('/color', getColor)
- router.post('/color',validarJWT, agregarcolor  );
- router.delete ( '/color',validarJWT, deleteColor );
+ router.get('/colores/color', getColor);
+ router.post('/colores',validarJWT, agregarcolor  );
+ router.delete ( '/colores',validarJWT, deleteColor );
 
 
  module.exports = router;

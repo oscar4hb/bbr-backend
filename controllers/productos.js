@@ -177,8 +177,10 @@ const borrarProducto = async ( req, res = response ) => {
     
 }
 
-// Peso
+// Colores
+
 const getColor = async (req, res = response) => {
+    console.log('OSCAR COLOR')
     const colores = await Color.find({}, { __v: 0 });
 
     res.json({
