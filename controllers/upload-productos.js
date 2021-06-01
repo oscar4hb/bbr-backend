@@ -43,6 +43,8 @@ const filesProduct = async (req, res = response) => {
     const img = req.files;
     const id = req.params.id;
 
+    console.log('foto de imagen producto')
+
 
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).json({
@@ -59,7 +61,7 @@ const filesProduct = async (req, res = response) => {
         });
       };
 
-        updateImgProduct(id , nombreImagen );
+        updateImgProduct (id , nombreImagen );
 
 
     }

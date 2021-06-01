@@ -2,10 +2,10 @@ const Usuario = require('../models/usuario');
 const Producto = require('../models/producto');
 const Categoria = require('../models/catagoria');
 
-const { ordenarImg } = require('../helpers/ordenarImg')
+const { ordenarImg } = require('../helpers/ordenarImg');
 
 const upgradeImg = async (tipo, id, urlImagen, orden) => {
-
+    console.log(urlImagen);
 
     switch (tipo) {
         case 'usuarios':
@@ -21,45 +21,36 @@ const upgradeImg = async (tipo, id, urlImagen, orden) => {
             break;
 
         case 'producto':
-
             const producto = await Producto.findById(id);
             if (!producto) {
                 return false;
             }
 
-         // Ordenar las posiciones de las imagens
-            ordenarImg(orden, producto)
+            // Ordenar las posiciones de las imagens
 
+            //  ordenarImg(orden, producto)
 
-            // producto.imgs.push(urlImagen);
+            producto.imgs[orden]= urlImagen;
             await producto.save();
             return true;
 
             break;
 
-
         case 'categorias':
-
             const categoria = await Categoria.findById(id);
             if (!categoria) {
                 return false;
             }
-
 
             categoria.imag = nombreArchivo;
             await categoria.save();
             return true;
 
             break;
-
-
     }
-
-
-}
+};
 
 const upgradeDeleteImg = async (tipo, id) => {
-
     switch (tipo) {
         case 'usuarios':
             const usuario = await Usuario.findById(id);
@@ -67,19 +58,17 @@ const upgradeDeleteImg = async (tipo, id) => {
                 return false;
             }
 
-            usuario.img = ''
-            await usuario.save()
+            usuario.img = '';
+            await usuario.save();
             return true;
 
             break;
 
         case 'producto':
-
             const producto = await Producto.findById(id);
             if (!producto) {
                 return false;
             }
-
 
             producto.imags.push(urlImagen);
             await producto.save();
@@ -87,27 +76,21 @@ const upgradeDeleteImg = async (tipo, id) => {
 
             break;
 
-
         case 'categorias':
-
             const categoria = await Categoria.findById(id);
             if (!categoria) {
                 return false;
             }
-
 
             categoria.imag = '';
             await categoria.save();
             return true;
 
             break;
-
     }
-
-
-}
+};
 
 module.exports = {
     upgradeImg,
-    upgradeDeleteImg
-}
+    upgradeDeleteImg,
+};

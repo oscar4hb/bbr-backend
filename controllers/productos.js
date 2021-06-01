@@ -180,7 +180,7 @@ const borrarProducto = async ( req, res = response ) => {
 // Colores
 
 const getColor = async (req, res = response) => {
-    console.log('OSCAR COLOR')
+    console.log('Obtener color')
     const colores = await Color.find({}, { __v: 0 });
 
     res.json({
