@@ -11,10 +11,12 @@ const PesoSchema = Schema(
             required: true,
         },
 
-        nombre: {
+        peso: {
             type: String,
             required: true,
         },
+
+        created:  {type: Date, default: Date.now}
 
     },
     {

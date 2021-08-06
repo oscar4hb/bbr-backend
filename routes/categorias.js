@@ -1,5 +1,9 @@
 const { Router } = require( 'express' );
-const { getCategorias, getCategoria, crearCategoria, actualizarCategoria, borrarCategoria } = require( '../controllers/categorias' );
+const { getCategorias, 
+        getCategoria, 
+        postCategoria, 
+        editCategoria, 
+        deleteCategoria } = require( '../controllers/categorias' );
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 /*
@@ -8,7 +12,7 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 const router = Router();
 
 const { check } = require( 'express-validator');
-
+   
 
 router.get('/:id',  getCategoria );
 
@@ -20,18 +24,18 @@ router.post('/',
               check('categoriaNombre', 'La nombre de la categoria es obligatorio').not().isEmpty(),
            
               validarCampos,
-            ],crearCategoria
+            ],postCategoria
              );
 
 router.put('/:id', 
         validarJWT,
         [
-         check('categoria', 'La categoría es obligatorio').not().isEmpty(),
+         check('categoriaNombre', 'La categoría es obligatorio').not().isEmpty(),
          validarCampos,
         ],
-        actualizarCategoria );
+        editCategoria );
 
 
- router.delete ( '/:id', validarJWT,  borrarCategoria );
+ router.delete ( '/:id', validarJWT,  deleteCategoria );
 
 module.exports = router;

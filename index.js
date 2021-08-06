@@ -24,9 +24,18 @@ dbConnection();
 
 // Rutas
 app.use('/api/usuarios', require('./routes/usuarios') );
+
+// CRUD -- Create Read Update Delete
 app.use('/api/productos', require('./routes/productos'));
+
+
+
+//Crear ID de producto
+app.use('/api/productoid', require('./routes/productoid'))
+
 app.use('/api/categorias', require('./routes/categorias') );
-app.use('/api/subcategoria', require('./routes/subcategoria') );
+app.use('/api/subcategorias', require('./routes/subcategoria') );
+app.use('/api/carousels', require('./routes/carousel'));
 app.use('/api/todo', require('./routes/busquedas') );
 app.use('/api/login', require('./routes/auth') );
 
@@ -41,6 +50,9 @@ app.use('/api/adress', require('./routes/adress') );
 
 // Unidades 
 app.use('/api/unidades', require('./routes/unidades'));
+
+
+ 
 
 // puerto de servidor 
 app.listen(process.env.PORT, () => {

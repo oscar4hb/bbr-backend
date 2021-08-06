@@ -1,16 +1,23 @@
 const { Router } = require( 'express' );
-const { getSubcategoria,  crearSubcategoria,  putSubcategoria, deleteSubcategoria } = require( '../controllers/subcategoria' );
+const { getSubcategorias,  
+        postSubcategoria,  
+        putSubcategoria, 
+        deleteSubcategoria, 
+        getSubcategoria } = require( '../controllers/subcategoria' );
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 /*
-   referencia de Ruta : /api/categorias
+   referencia de Ruta : /api/subcategorias
 */
 const router = Router();
 
 const { check } = require( 'express-validator');
 
 
-router.get('/', getSubcategoria);
+
+router.get('/:id', getSubcategoria);
+
+router.get('/', getSubcategorias);
 
 router.post('/',
                 validarJWT,
@@ -18,7 +25,7 @@ router.post('/',
               check('subcategoria', 'La nombre es obligatorio').not().isEmpty(),
               check('categoria', 'El ID de la categoria no es valido').isMongoId(),
               validarCampos,
-            ], crearSubcategoria
+            ], postSubcategoria
              );
 
 router.put('/:id', 

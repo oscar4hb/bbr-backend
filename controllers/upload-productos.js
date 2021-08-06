@@ -16,13 +16,9 @@ const storage = multer.diskStorage({
     }
 });
 
-
-
-
 const retornaImagenProduct = (req, res = response ) => {
 
-   
-    const foto = req.params.foto;
+       const foto = req.params.foto;
 
     const pathImg = path.join(__dirname, `../uploads/product/${ foto }`);
 

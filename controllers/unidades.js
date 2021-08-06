@@ -1,44 +1,52 @@
 const { response } = require('express');
 const Longitud = require('../models/unidades/longitud');
-const Peso = require('../models/unidades/peso')
+const Peso = require('../models/unidades/peso');
+const Color = require('../models/unidades/colores');
 
 //ver todas la unidades Longitud de un solo usuario
 const getLogitud = async (req, res = response) => {
-    const unidadesLongitud = await Longitud.find({}, { __v: 0 });
-
+    const [longitud, cantidad] = await Promise.all([
+        Longitud.find({}, { __v: 0 }).populate('usuario', 'email'),
+        Longitud.countDocuments(),
+    ]);
+    
     res.json({
         ok: true,
-        unidadesLongitud,
+        longitud,
+        cantidad,
     });
 };
 
 // add de un solo usuario
 const postLogitud = async (req, res = response) => {
     const uid = req.uid;
-    const { nombre } = req.body;
+    const { longitud } = req.body;
 
     try {
-        const unidadLongExiste = await Longitud.findOne({ nombre });
+        const longitudDB = await Longitud.findOne({ longitud });
 
-        if (unidadLongExiste) {
-            return res.status(400).json({
+        if (longitudDB) {
+            return res.status(201).json({
                 ok: false,
-                msg: `${unidadLongExiste.nombre} : ya existe`,
+                msg: `${longitudDB.Longitud} ya existe`,
             });
         } else {
             const longitud = new Longitud({ usuario: uid, ...req.body });
-
-            const unidadLongitudDB = await longitud.save();
+            const longitudDB = await longitud.save();
+            const longitudId = await Longitud.findById({ _id: longitudDB._id })
+            .populate('usuario', 'email' );
 
             res.json({
                 ok: true,
-                unidadLongitudDB,
+                usuario: longitudId.usuario.email,
+                id: longitudDB._id,
+                created: longitudDB.created,
             });
         }
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: `Hubo un en la catch : ${error} `,
+            msg: `Error : ${error} `,
         });
     }
 };
@@ -46,71 +54,74 @@ const postLogitud = async (req, res = response) => {
 // delete Longitud
 
 const deleteLongitud = async (req, res = response) => {
-
     const id = req.params.id;
 
     try {
+        const longitudExiste = await Longitud.findById({_id: id});
 
-        const longitudExiste = await Longitud.findById(id);
-
-    
         if (!longitudExiste) {
-            res.status(200).json({
+            res.status(500).json({
                 ok: false,
-                msg: `${id}: No existe o ya fue eliminado`,
+                msg: 'No existe o ya fue eliminado'
             });
         }
 
-        if (longitudExiste){
-            await Longitud.findByIdAndDelete(id);
-    
+       else {
+            await Longitud.findByIdAndDelete({_id: id});
+
             res.json({
                 ok: true,
-                msg: `${id}: ha sido eliminado`,
+                msg: `Se eliminó la longitud: ${longitudExiste.longitud}`,
             });
-
         }
-    
-
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: `Hubo un error en la catch : ${error} `,
+            msg: `Hubo un error : ${error} `,
         });
     }
 };
 
 // Peso
 const getPeso = async (req, res = response) => {
-    const unidadesPeso = await Peso.find({}, { __v: 0 });
+    const [pesos, cantidad] = await Promise.all([
+        Peso.find({}, { __v: 0 }).populate('usuario', 'email'),
+
+        Peso.countDocuments(),
+    ]);
 
     res.json({
         ok: true,
-        unidadesPeso,
+        pesos,
+        cantidad,
     });
 };
 
 const postPeso = async (req, res = response) => {
-
     const uid = req.uid;
-    const { nombre } = req.body;
+    const { peso } = req.body;
 
     try {
-        const unidadPesoExiste = await Peso.findOne({ nombre });
+        const unidadPesoExiste = await Peso.findOne({ peso });
 
         if (unidadPesoExiste) {
-            return res.status(400).json({
+            return res.status(201).json({
                 ok: false,
-                msg: `${unidadPesoExiste.nombre} : ya existe`,
+                msg: `${unidadPesoExiste.peso} : ya existe`,
             });
         } else {
             const peso = new Peso({ usuario: uid, ...req.body });
-
-            const unidadPesoDB = await peso.save();
+            const pesoDB = await peso.save();
+            const pesoId = await Peso.findById({ _id: pesoDB._id }).populate(
+                'usuario',
+                'email'
+            );
 
             res.json({
                 ok: true,
-                unidadPesoDB,
+                usuario: pesoId.usuario.email,
+                id: pesoDB._id,
+                created: pesoDB.created,
             });
         }
     } catch (error) {
@@ -122,36 +133,100 @@ const postPeso = async (req, res = response) => {
 };
 
 const deletePeso = async (req, res = response) => {
-
     const id = req.params.id;
 
     try {
-
-        const pesoExiste = await Peso.findById(id);
-        console.log(pesoExiste);
-    
+        const pesoExiste = await Peso.findById({ _id: id });
         if (!pesoExiste) {
-            res.status(200).json({
+            return res.status(200).json({
                 ok: false,
                 msg: `Unidad de peso no existe o ya fue eliminado`,
             });
         }
 
-        if (pesoExiste){
-            await Peso.findByIdAndDelete(id);
-    
+        if (pesoExiste) {
+            await Peso.findOneAndDelete({ _id: id });
+
             res.json({
                 ok: true,
-                msg: `${pesoExiste.nombre}: ha sido eliminado`,
+                msg: `${pesoExiste.peso}: ha sido eliminado`,
             });
-
         }
-    
-
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: `Hubo un error en la catch : ${error} `,
+            msg: `Hubo un error: ${error} `,
+        });
+    }
+};
+
+// Color
+const getColor = async (req, res = response) => {
+    const [colores, cantidad] = await Promise.all([
+
+                            Color.find({},{ __v: 0 }).populate('usuario', 'email'),
+
+                            Color.countDocuments()
+    ]);
+
+ 
+    res.json({
+        ok: true,      
+        colores,
+        cantidad,
+    });
+};
+
+const postColor = async (req, res = response) => {
+    const uid = req.uid;
+    const { color } = req.body;
+
+    const colorDB = await Color.findOne({ color });
+
+    if (colorDB) {
+        return res.status(201).json({
+            ok: false,
+            msg: `El color: ${colorDB.color} ya existe`,
+        });
+    } else {
+        const color = new Color({ usuario: uid, ...req.body });
+        const colorBD = await color.save();
+
+        const colorId = await Color.findById({ _id: colorBD._id })
+                    .populate('usuario', 'email' );
+
+        res.json({
+            ok: true,
+            usuario: colorId.usuario.email,
+            id: colorBD._id,
+            created: colorBD.created,
+        });
+    }
+};
+
+const deleteColor = async (req, res = response) => {
+    const id = req.params.id;
+
+    try {
+        const colorExiste = await Color.findById({ _id: id });
+
+        if (!colorExiste) {
+            return res.status(500).json({
+                ok: false,
+                msg: `El color no existe o ya fue eliminado`,
+            });
+        } else {
+            await Color.findOneAndDelete({ _id: id });
+
+            res.json({
+                ok: true,
+                msg: `Se elimino el color ${colorExiste.color} `,
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: `Hubo un error : ${error} `,
         });
     }
 };
@@ -160,8 +235,12 @@ module.exports = {
     getLogitud,
     postLogitud,
     deleteLongitud,
+
     getPeso,
     postPeso,
-    deletePeso
+    deletePeso,
 
+    getColor,
+    postColor,
+    deleteColor,
 };

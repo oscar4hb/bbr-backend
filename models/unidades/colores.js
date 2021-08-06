@@ -9,7 +9,9 @@ const ColoresSchema = Schema({
     color :{
         type: String,
         required: true
-    }
+    },
+
+    created: { type: Date, default: Date.now }
 
 }, {
     collection: 'colores'

@@ -1,12 +1,10 @@
 const { Router } = require( 'express' );
 const {  getProducto, 
-         getProductos, 
+         getProductos,
+         getProductosOfUserList, 
          crearProducto, 
          actualizarProducto, 
-         borrarProducto,
-         getColor, 
-         agregarcolor, 
-         deleteColor } = require( '../controllers/productos' )
+         borrarProducto } = require( '../controllers/productos' )
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 /*
@@ -16,40 +14,33 @@ const router = Router();
 
 const { check } = require( 'express-validator');
 
-router.get('/:id', [
-                   check('id', 'El ID de la categoria no es valido').isMongoId(),
-                  validarCampos,
-                   ], getProducto );
+router.get('/:id', validarCampos, getProducto );
 
 router.get('/', getProductos );
 
-router.post('/',
-            validarJWT,
-           [ 
-            check('titulo', 'El titulo es obligatorio').not().isEmpty(),
-             check('subcategoria', 'El id de subcategoria debe ser valido').isMongoId(),
-             validarCampos,
-           ],
-           crearProducto 
-            );
+router.get('/user/list',validarJWT, getProductosOfUserList);
 
-
-
+ router.get('/width/:size', getProductos );
+ 
+router.post('/', validarJWT, validarCampos, crearProducto  );
+  
 router.put('/:id', 
         validarJWT,
         [
-         check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+         check('titulo', 'El titulo es obligatorio').not().isEmpty(),
+         check( 'categoria', 'La categoria es obligatoria' ).not().isEmpty(),
+         check( 'subcategoria', 'La Subcategoria es obligatoria' ).not().isEmpty(),
+         check( 'codigo', 'El codigo es obligatoria' ).not().isEmpty(),
+
          validarCampos,
         ],
         actualizarProducto );
 
-
+ router.put('/final/:id', validarJWT, validarCampos,  actualizarProducto );
+ 
  router.delete ( '/:id', validarJWT,  borrarProducto );
+ 
 
-
- router.get('/colores/color', getColor);
- router.post('/colores',validarJWT, agregarcolor  );
- router.delete ( '/colores',validarJWT, deleteColor );
 
 
  module.exports = router;

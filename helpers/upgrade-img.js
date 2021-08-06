@@ -4,8 +4,8 @@ const Categoria = require('../models/catagoria');
 
 const { ordenarImg } = require('../helpers/ordenarImg');
 
-const upgradeImg = async (tipo, id, urlImagen, orden) => {
-    console.log(urlImagen);
+const upgradeImg = async (tipo, id, urlImagen, orden, id_img) => {
+
 
     switch (tipo) {
         case 'usuarios':
@@ -28,9 +28,9 @@ const upgradeImg = async (tipo, id, urlImagen, orden) => {
 
             // Ordenar las posiciones de las imagens
 
-            //  ordenarImg(orden, producto)
+            ordenarImg(orden, producto)
 
-            producto.imgs[orden]= urlImagen;
+            producto.imgs[orden]= id_img;
             await producto.save();
             return true;
 

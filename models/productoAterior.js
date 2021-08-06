@@ -8,20 +8,16 @@ const ProductoSchema = Schema(
             //required: true,
         },
         categoria: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: 'Categoria',
            // required: true
         },
 
         subcategoria: {
-            type: String,
-            //required: true
-        },
-        
-        subcategoriaId:{
-    
             type: Schema.Types.ObjectId,
             ref: 'Subcategoria',
-        },
+            //required: true
+        },  
 
         codigo: {
             type: String,
@@ -40,32 +36,25 @@ const ProductoSchema = Schema(
                 // required: true,
             },
 
-            color: {
-                combinaciones: {  type: Number, },
-                colorUno: { type: String, },
-                colorDos: { type: String,},
-                colorTres: { type: String,},
-                colorCuatro: { type: String,},
-                colorCinco: {type: String, },
-
-               // colorCinco: { type: Schema.Types.ObjectId,  ref: 'Color' },
-       
+            colorstandar: {
+                type: Schema.Types.ObjectId,
+               ref: 'Color',
             },
 
             peso: {
-                peso : { type: Number},
+                peso : { type: String},
                 unidad: { type: String}
             },
 
             volumen: {
                 unidad : { type: String},
-                ancho : { type: Number},
-                alto : { type: Number},
-                largo : { type: Number},
+                ancho : { type: String},
+                alto : { type: String},
+                largo : { type: String},
             },
 
             stock: {
-                type: Number,
+                type: String,
             },
         },
 
@@ -75,7 +64,7 @@ const ProductoSchema = Schema(
                 type: String,
                 // required: true
             },
-            resumen: {
+            descripcionResumen: {
                 type: String,
                 // required: true
             },
@@ -84,7 +73,7 @@ const ProductoSchema = Schema(
         //  Tercera pagina- Precio
 
         precio: {
-            moneda: {
+            tipoMoneda: {
                 type: String,
                 // required: true,
             },
@@ -94,160 +83,131 @@ const ProductoSchema = Schema(
             },
             oferta: {
                 type: Boolean,
-                default: false
-            },
-            ofertaTrue: {
-                    codigoProducto: {
+                // required: true,
+                default: false,
+                ofertaProducto: {
+                    productoCodigo: {
                         type: String,
                       //  required: true,
                     },
-            
+                    lugarOrogen: {
+                        type: String,
+                     //   required: true,
+                    },
                     precioOferta: {
                         type: Number,
                       //  required: true,
                     },
-                    fechaInicio: {
+                    FechaInicioOferta: {
                         type: Date,
                       //  required: true,
                     },
-                    fechaFin: {
+                    FechaFinOferta: {
                         type: Date,
                      //   required: true,
                     },
-                    fechaVenta: {
+                    FechaInicioDeVenta: {
                         type: Date,
                        //   required: true,
                     },
                 },
             },
-        
+        },
 
         /* */
 
         //  Cuarta pagina -Imagenes
-        imagenes: {
+        imgs: {
             principal: {
                 type: Schema.Types.ObjectId,
                 ref: 'Imagenes',
-         
             },
             segundo: {
                 type: Schema.Types.ObjectId,
                 ref: 'Imagenes',
-    
             },
             tercero: {
-        
-                type: Schema.Types.ObjectId ,
-                ref: 'Imagenes' ,
-                required: false,
-            },
-            cuarto: {
-      
-                type: Schema.Types.ObjectId ,
-                ref: 'Imagenes' ,
-                required: false,
-            },
-            quinto: {
-          
-                type: Schema.Types.ObjectId ,
-                ref: 'Imagenes' ,
-                required: false,
-                
-            },
-            sexto: {
-            
-                type: Schema.Types.ObjectId ,
-                ref: 'Imagenes' ,
-                required: false,
-            },
-            septimo: {
-         
-                type: Schema.Types.ObjectId ,
-                ref: 'Imagenes' ,
-                required: false,
-            },
-
-            octavo: {
-          
                 type: Schema.Types.ObjectId,
                 ref: 'Imagenes',
-                required: false,
             },
-
-            noveno: {
-                
-                type:  Schema.Types.ObjectId,
+            cuarto: {
+                type: Schema.Types.ObjectId,
                 ref: 'Imagenes',
-                required: false,
             },
-
-
+            quinto: {
+                type: Schema.Types.ObjectId,
+                ref: 'Imagenes',
+            },
+            sexto: {
+                type: Schema.Types.ObjectId,
+                ref: 'Imagenes',
+            },
+            septimo: {
+                type: Schema.Types.ObjectId,
+                ref: 'Imagenes',
+            },
         },
         //  Quinta pagina - Variantes
         variantes: {
-            variantes: {
-                type: Number,
-   
+            existe: {
+                type: Boolean,
+                default: false,
+                //required: true,
             },
-            colorUno: { type: String },
-            colorDos: { type: String },
-            colorTres: { type: String },
-            colorCuatro: { type: String },
-            colorCinco: { type: String },
-            colorSeis: { type: String },
-            colorSiete: { type: String },
-            colorOcho: { type: String },
-            colorNueve: { type: String },
-            colorDiez: { type: String },     
+            color: [
+                {
+                    type: String
+                },
+            ],
         },
 
         // Sexta pagina  - Palabras claves de busqueda
         envios: {
-            recojoTienda: {
-                disponibilidad: {
-                    type: Boolean,
+            reconjoTienda: {
+                dispomibilidad: {
+                    type: String,
                 },
-                horarioDeAtencion:{
+                horarioAtencion:{
                     type: Object
                 }
                
             },
             envios: {
-                disponibilidad: {
-                    type: Boolean,  
+                dispomibilidad: {
+                    type: String,
+                     
                 },
 
-                envioGratisCosto:{
+                envioCostoGratis:{
                     type: String,
                 },
 
                 lugaresDisponibles:{
-                    type: String,
+                    type: String
                 },
 
-                departamentosDisponibles:[{
-                    type: String,
-                }],
+                departaDisponibles:{
+                    type: String
+                },
                 costoEnvio: {
-                    type: Number,
+                    type: String,
                 },
 
-                tiempoEnvio: {
+                tipoTiempoEnvio: {
                     type: String,
 
                 },
 
-                tiempoExacto: {
-                    type: Number,
+                tiempoDias: {
+                    type: String,
                 },
 
-                tiempoRango: {
+                tiempoSemnas: {
                     type: String,
                 },
 
                 contraentrega: {
-                    type: Boolean,
+
                 }
  
             },

@@ -11,10 +11,12 @@ const LongitudSchema = Schema(
             required: true,
         },
 
-        nombre: {
+        longitud: {
             type: String,
             required: true,
         },
+
+        created:  {type: Date, default: Date.now}
 
     },
     {

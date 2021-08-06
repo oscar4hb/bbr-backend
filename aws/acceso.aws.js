@@ -27,7 +27,7 @@ const { response } = require('express');
       else {
         const AccesoID = AWS.config.credentials.accessKeyId;
         console.log('Conexión AWS successful');
-        console.log("Access key:", AccesoID);
+        // console.log("Access key:", AccesoID);
        
 
       }

@@ -7,11 +7,18 @@ const CategoriaSchema = Schema(
             required: true,
         },
 
-        cantidad: {
+        cantidadSubcat: {
             type: Number,
+            default:0
+        },
+
+        cantidadProduc: {
+            type: Number,
+            default:0
         },
         img: {
             type: String,
+            default: null
         },
 
         rating: {
@@ -20,6 +27,8 @@ const CategoriaSchema = Schema(
         reviews: {
             type: Number,
         },
+
+        created: {type: Date, default: Date.now},
 
         usuario: {
             type: Schema.Types.ObjectId,
